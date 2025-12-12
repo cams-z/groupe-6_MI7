@@ -1,4 +1,5 @@
 from random import randint
+import time
 
 def initialise_sequence():
     return [randint(0,3)]
@@ -8,17 +9,20 @@ def add_to_sequence(s):
     return s
 
 def game_round(s):
-    print(s)
-    for e in s:
+    print("-------------------")
+    for e1 in s:
+        print(e1)
+        time.sleep(1)
+    print("à vous de jouer")
+    for e2 in s:
         sequence_input = int(input())
-        if sequence_input != e:
+        if sequence_input != e2:
             return False
     return True
 
 def game():
     s = initialise_sequence()
     while game_round(s):
-
         s = add_to_sequence(s)
     return "perdu"
 
