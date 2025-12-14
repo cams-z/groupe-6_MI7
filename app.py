@@ -17,8 +17,14 @@ def index():
 def start():
     global game_status
     game_status = "Jeu en cours"
-    threading.Thread(target=game).start()
+    threading.Thread(target=run_game).start()
     return "ok"
+
+
+def run_game():
+    global game_status
+    score = game()
+    game_status = f"Perdu — score : {score}"
 
 @app.route("/status")
 def status():
