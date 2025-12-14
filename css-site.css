@@ -1,38 +1,59 @@
 body {
     background-color: rgb(28, 0, 31);
+    margin: 0;
+    height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
-    margin: 0;
+}
+
+.ui {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 30px;
+    z-index: 2;
 }
 
 button {
-    position: absolute;
-    margin-left: auto;
-    margin-right: auto;
-    margin-top: auto;
-    margin-bottom: auto;
     width: 300px;
     height: 100px;
-    display: block;
     font-size: 50px;
     font-family: 'Franklin Gothic Medium';
-    border-color: aliceblue;
-    border-width: 7px;
+    border: 7px solid aliceblue;
     border-radius: 25px;
     background-color: rgb(46, 2, 51);
     color: aliceblue;
+    cursor: pointer;
+
+    box-shadow:
+        0 8px 0 rgb(25, 1, 28),
+        0 12px 20px rgba(0, 0, 0, 0.6);
+
+    transition: transform 0.1s ease, box-shadow 0.1s ease;
 }
 
-p1 {
-    position: absolute;
+button:active {
+    transform: translateY(4px);
+    box-shadow:
+        0 2px 0 rgb(25, 1, 28),
+        0 6px 10px rgba(0, 0, 0, 0.6);
+}
+
+button:hover {
+    filter: brightness(1.1);
+}
+
+p {
     color: aliceblue;
-    font-size: 125px;
+    font-size: 80px;
     font-family: 'Franklin Gothic Medium';
-    top: 275px;
+    margin: 0;
 }
 
-img {
-    position: absolute;
+.logo {
+    width: 200px;          
+    margin-bottom: 20px; 
+    align-items: center;
+    color: aliceblue;
 }
