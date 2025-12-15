@@ -15,6 +15,15 @@ body {
     width: 75%;
 }
 
+.bt {
+    margin: 30px;
+    height: 150px;
+    font-size: 60px;
+    font-family: 'Franklin Gothic Medium';
+    border-radius: 40px;
+    color: aliceblue;
+}
+
 button {
     width: 450px;
     height: 150px;
