@@ -79,6 +79,14 @@ p1 {
 
 
 .logo {
+    width: 300px;          
+    margin-bottom: 20px; 
+    align-items: center;
+    color: aliceblue;
+}
+
+
+.pigeon {
     width: 200px;          
     margin-bottom: 20px; 
     align-items: center;
