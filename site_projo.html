@@ -6,7 +6,7 @@
         <title>Simon</title>
 
         <meta charset="utf-8" />
-        <link rel="stylesheet" type="text/css" href="css-site.css">
+        <link rel="stylesheet" type="text/css" href="/css-site.css">
 
     </head>
 
@@ -14,30 +14,40 @@
 
         <div class="ui">
 
-	    <img src="simon.gif" alt="SIMON LOGO" class="logo">
-
+            <img src="simon.gif" alt="SIMON LOGO" class="logo">
             <img src="pierre-augustine.gif" alt="PIGEON PARTY" class="pigeon"> 
 
-            <p1>Score: 0</p1>
+                <p id="status" class = "bt" >En attente</p>
+                <button onclick="startGame()">START</button>
 
-            <button type="button">START</button> 
+            <details class="collapsible">
 
-	
-	<details class="collapsible">
-	    <summary>Règles du jeu</summary>
-
-	    <p2>Bienvenue au jeu du Simon ! Les règles sont très simples :<br>
-	    - lorsque le jeu commence, une première lumière, associée à un bouton, va s'allumer aléatoirement ;<br>
-	    - si vous appuyez sur ce même bouton, le jeu continue et vous marquez 50 points ;<br>
-	    - la première lumière qui s'est allumée se rallume, puis s'en allume encore une, et vous devez reproduire la suite de lumières qui se sont allumées ;<br>
-	    - si vous réussissez, vous marquez encore 50 points et la séquence lumineuse s'allonge encore d'une lumière, et ainsi de suite ;<br>
-	    - le jeu s'arrête lorsque vous vous trompez dans la reproduction de la séquence lumineuse ;<br>
-	    - c'est un jeu de mémoire ! Plus vous tenez le coup, plus votre score sera haut. À vous de jouer !<br></p2>
-	    
-	</details>
+                <summary>Règles du jeu</summary>
+                <p2>Bienvenue au jeu du Simon ! Les règles sont très simples :<br>
+                - lorsque le jeu commence, une première lumière, associée à un bouton, va s'allumer aléatoirement ;<br>
+                - si vous appuyez sur ce même bouton, le jeu continue et vous marquez 50 points ;<br>
+                - la première lumière qui s'est allumée se rallume, puis s'en allume encore une, et vous devez reproduire la suite de lumières qui se sont allumées ;<br>
+                - si vous réussissez, vous marquez encore 50 points et la séquence lumineuse s'allonge encore d'une lumière, et ainsi de suite ;<br>
+                - le jeu s'arrête lorsque vous vous trompez dans la reproduction de la séquence lumineuse ;<br>
+                - c'est un jeu de mémoire ! Plus vous tenez le coup, plus votre score sera haut. À vous de jouer !<br></p2>
+                
+            </details>
 	
 	</div>
-	
+	<script>
+function startGame() {
+    fetch("/start");
+}
+
+setInterval(() => {
+    fetch("/status")
+        .then(r => r.text())
+        .then(text => {
+            document.getElementById("status").innerText = text;
+        });
+}, 500);
+</script>
+
     </body>
 
 </html>
