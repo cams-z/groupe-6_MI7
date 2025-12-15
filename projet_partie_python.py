@@ -1,10 +1,15 @@
 from grove.gpio import GPIO
-from time import sleep
 from grove.grove_button import GroveButton
+
+from random import randint
+from time import sleep
+from time import time as current_time
+
 import RPi.GPIO as GPIO2
 GPIO2.setmode(GPIO2.BCM)
 
-class GroveChainableLED:
+
+class GroveChainableLED: #code fournit par le prof pour les chainable LED
 	def __init__(self, pin, num_leds):
 		self.pin_clk = GPIO(pin, GPIO.OUT)
 		self.pin_data = GPIO(pin+1 , GPIO.OUT)
@@ -59,6 +64,7 @@ class GroveChainableLED:
 		self.pin_clk.write(1)
 		#sleep(0.01) # works without it
 
+	
 	def _write_byte(self, b):
 		if b == 0:
 			# Fast send 8x zeros
@@ -94,29 +100,96 @@ class GroveChainableLED:
 
 
 
-
+#setup des boutons et des LEDS
 chain = GroveChainableLED(pin=16, num_leds=4)
-
-button = GroveButton(22)
 GPIO2.setup(22, GPIO2.IN)
 GPIO2.setup(24, GPIO2.IN)
 GPIO2.setup(26, GPIO2.IN)
+GPIO2.setup(2, GPIO2.IN)
+buttons = {0:  22, 1: 24, 2: 26, 3: 2} #on associ chaque couleur a un bouton
 
-while True:
-	if GPIO2.input(22):
+
+
+def light_up_LED(index): #fonction qui allume la "index"-ieme LED pendant 1 seconde
+	if index == 0:
 		chain[0] = (100,44, 221)
 		chain.write()
-		sleep(0.5)
+		sleep(1)
 
-	if GPIO2.input(24):
+	if index == 1:
 		chain[1] = (232, 150, 46)
 		chain.write()
-		sleep(0.5)
+		sleep(1)
 
-	if GPIO2.input(26):
+	if index == 2:
 		chain[2] = (250, 75, 70)
 		chain.write()
-		sleep(0.5)
+		sleep(1)
 
-	
+	if index == 3:
+		chain[3] = (50, 75, 150)
+		chain.write()
+		sleep(1)
+		
 	chain.reset()
+
+
+
+def GAME_OVER(): #fonction qui allume tout les LEDs en rouge pour annoncer le Game Over
+	chain[0] = (250, 000, 000)
+	chain[1] = (250, 000, 000)
+	chain[2] = (250, 000, 000)
+	chain[3] = (250, 000, 000)
+	chain.write()
+	sleep(1)
+	chain.reset()
+	
+
+def initialise_sequence(): 
+    return [randint(0,3)]
+
+def add_to_sequence(s):
+    s.append(randint(0,3))
+    return s
+
+def game_round(s):
+    for e1 in s:
+		light_up_LED(e1)
+        #a voir si on ajoute du son ou non
+        time.sleep(1)
+    
+
+    for e2 in s: #a tester
+        buttons = {0:  22, 1: 24, 2: 26, 3: 2} 
+        buttons.pop(e2)
+		start = time.current_time() 
+		reussite = True
+		while True:
+			if GPIO2.input(buttons(e2)):
+                # si on appuie sur le bon bouton, on laisse reussite sur True
+                light_up_LED(e2)
+                break
+            
+            for b in buttons:
+                if GPIO2.input(buttons(b)):
+                    russite = False
+                    GAME_OVER()
+                    break
+
+			if time.current_time() - start >= 7:
+				reussite == False
+				break
+
+    return reussite
+
+
+def game():
+    score = 0
+    s = initialise_sequence()
+    while game_round(s):
+        s = add_to_sequence(s)
+        score += 50
+    return "perdu, score final : " + str(score)
+
+
+print(game())
