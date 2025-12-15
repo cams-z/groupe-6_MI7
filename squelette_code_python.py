@@ -23,9 +23,11 @@ def game_round(s):
 def game():
     score = 0
     s = initialise_sequence()
+
     while game_round(s):
         s = add_to_sequence(s)
         score += 50
-    return "perdu, score final : " + str(score)
 
-print(game())
+    print("perdu")
+    print("score final :", score)
+    return score
