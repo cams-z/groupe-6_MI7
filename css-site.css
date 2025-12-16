@@ -8,6 +8,8 @@ body {
 }
 
 .ui {
+    margin-top: 50%;
+    margin-bottom: 300px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -28,6 +30,7 @@ button {
     width: 450px;
     height: 150px;
     font-size: 75px;
+    margin-bottom: 60px;
     font-family: 'Franklin Gothic Medium';
     border: 7px solid aliceblue;
     border-radius: 40px;
@@ -60,11 +63,9 @@ p1 {
     margin: 25px;
 }
 
-
 .collapsible summary {
     text-align: center;
     width: relative;
-    margin-top: 50px;
     font-size: 20px;
     font-family: 'Franklin Gothic Medium';
     cursor: pointer;
@@ -86,18 +87,15 @@ p1 {
     text-align: justify;
 }
 
-
 .logo {
-    width: 300px;          
+    width: 500px;
     margin-bottom: 20px; 
     align-items: center;
     color: aliceblue;
 }
-
 
 .pigeon {
     width: 200px;          
     margin-bottom: 20px; 
     align-items: center;
     color: aliceblue;
-}
