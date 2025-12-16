@@ -1,6 +1,6 @@
 from flask import Flask, send_file
 import threading
-from squelette_code_python import game
+from code_simon import game
 import logging
 
 app = Flask(__name__)
@@ -58,3 +58,4 @@ def simon():
 
 if __name__ == "__main__":
     app.run(debug=True)
+
