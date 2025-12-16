@@ -19,7 +19,7 @@ def run_game():
     global game_status, current_score, final_score
 
     current_score = 0
-    game_status = "Jeu lancer !"
+    game_status = "Jeu lancé !"
 
     def update_score(score):
         global current_score
