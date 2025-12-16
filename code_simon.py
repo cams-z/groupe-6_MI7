@@ -127,20 +127,18 @@ def game_round(s):
     return True
 
 
-def game():
-    global current_score, game_status
-
-    current_score = 0
-    game_status = "Jeu en cours"
+def game(update_score_callback):
     chain.reset()
-
+    score = 0
     s = initialise_sequence()
 
     while game_round(s):
         s = add_to_sequence(s)
-        current_score += 50
+        score += 50
+        update_score_callback(score)
         sleep(1)
 
     GAME_OVER()
-    game_status = "PERDU"
-    return current_score
+    print("perdu")
+    return score
+
