@@ -6,7 +6,6 @@ import logging
 app = Flask(__name__)
 logging.getLogger('werkzeug').setLevel(logging.ERROR)
 
-game_status = "Lancer le jeu ?"
 current_score = 0
 final_score = 0
 game_thread = None
@@ -19,14 +18,12 @@ def run_game():
     global game_status, current_score, final_score
 
     current_score = 0
-    game_status = "Jeu lancé !"
 
     def update_score(score):
         global current_score
         current_score = score   # score mis à jour en live
 
     final_score = game(update_score)
-    game_status = f"PERDU !"
 
 @app.route("/start")
 def start():
@@ -35,10 +32,6 @@ def start():
         game_thread = threading.Thread(target=run_game)
         game_thread.start()
     return "ok"
-
-@app.route("/status")
-def status():
-    return game_status
 
 @app.route("/score")
 def score():
@@ -58,4 +51,3 @@ def simon():
 
 if __name__ == "__main__":
     app.run(debug=True)
-
