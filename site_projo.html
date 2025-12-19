@@ -1,40 +1,54 @@
 <!DOCTYPE html>
-
 <html>
-    <head>
-        <title>Simon</title>
-        <meta charset="utf-8" />
-        <link rel="stylesheet" type="text/css" href="/css-site.css">
-    </head>
+<head>
+    <title>Simon</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" type="text/css" href="/css-site.css">
+</head>
 
-    <body>
+<body>
 
-        <div class="ui">
+<div class="ui">
 
-            <img src="simon.gif" alt="SIMON LOGO" class="logo">
-            <img src="pierre-augustine.gif" alt="PIGEON PARTY" class="pigeon"> 
-            
-            <p id="score" class="bt">Score : 0</p>
-            <button onclick="startGame()">START</button>
+    <img src="simon.gif" alt="SIMON LOGO" class="logo">
+    <img src="pierre-augustine.gif" alt="PIGEON PARTY" class="pigeon">
 
-            <details class="collapsible">
-                <summary>Règles du jeu</summary>
-                <p2>
-                Bienvenue au jeu du Simon ! Les règles sont très simples :<br>
-                - lorsque le jeu commence, une première lumière, associée à un bouton, va s'allumer aléatoirement ;<br>
-                - si vous appuyez sur ce même bouton, le jeu continue et vous marquez 50 points ;<br>
-                - la première lumière qui s'est allumée se rallume, puis s'en allume encore une, et vous devez reproduire la suite de lumières qui se sont allumées ;<br>
-                - si vous réussissez, vous marquez encore 50 points et la séquence lumineuse s'allonge encore d'une lumière, et ainsi de suite ;<br>
-                - le jeu s'arrête lorsque vous vous trompez dans la reproduction de la séquence lumineuse ;<br>
-                - c'est un jeu de mémoire ! Plus vous tenez le coup, plus votre score sera haut. À vous de jouer !<br>
-                </p2>
-            </details>
-	
-	    </div>
+    <p id="score" class="bt">Score : 0</p>
+    <button onclick="startGame()">START</button>
 
-	    <script>
+<!-- Saisie du nom -->
+<div id="save" class="save-score" style="display:none;">
+    <p class="enter-name-title">Entre ton nom</p>
+    <input type="text" id="name" class="name-input" placeholder="Votre nom">
+    <button class="validate-btn" onclick="saveScore()">Valider</button>
+</div>
+
+    <!-- REGLES  -->
+    <details class="collapsible">
+        <summary>Règles du jeu</summary>
+        <p2>
+            Bienvenue au jeu du Simon ! Les règles sont très simples :<br>
+            - lorsque le jeu commence, une première lumière va s’allumer ;<br>
+            - reproduisez la séquence correctement pour gagner 50 points ;<br>
+            - la séquence s’allonge à chaque tour ;<br>
+            - le jeu s’arrête dès que vous vous trompez ;<br>
+            - plus vous tenez longtemps, plus le score est élevé.
+        </p2>
+    </details>
+
+        <!-- CLASSEMENT -->
+    <details class="collapsible">
+        <summary>Classement</summary>
+        <ul id="leaderboard"></ul>
+    </details>
+
+
+</div>
+<script>
 function startGame() {
     fetch("/start");
+    document.getElementById("save").style.display = "none";
+    document.getElementById("name").value = "";
 }
 
 setInterval(() => {
@@ -44,14 +58,44 @@ setInterval(() => {
             document.getElementById("score").innerText = "Score : " + score;
         });
 
-    fetch("/status")
+    fetch("/game_over")
         .then(r => r.text())
-        .then(text => {
-            document.getElementById("status").innerText = text;
+        .then(state => {
+            if (state === "1") {
+                document.getElementById("save").style.display = "block";
+            }
         });
 }, 500);
 
-        </script>
+function saveScore() {
+    let name = document.getElementById("name").value;
+    if (!name) return;
 
-    </body>
+    fetch("/save_score", {
+        method: "POST",
+        headers: {"Content-Type": "application/x-www-form-urlencoded"},
+        body: "name=" + encodeURIComponent(name)
+    }).then(() => {
+        document.getElementById("save").style.display = "none";
+        loadScores();
+    });
+}
+
+function loadScores() {
+    fetch("/scores")
+        .then(r => r.json())
+        .then(data => {
+            let ul = document.getElementById("leaderboard");
+            ul.innerHTML = "";
+            data.forEach((e, i) => {
+                ul.innerHTML += `<li class="leaderboard-item">${i + 1}. ${e[0]} - ${e[1]}</li>`;
+            });
+        });
+}
+
+loadScores();
+</script>
+
+
+</body>
 </html>
