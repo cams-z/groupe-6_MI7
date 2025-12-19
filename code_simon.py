@@ -6,7 +6,7 @@ import RPi.GPIO as GPIO2
 
 GPIO2.setmode(GPIO2.BCM)
 
-# variable partager avec flask
+# variable partagé avec flask
 current_score = 0
 game_status = "En attente"
 
@@ -70,13 +70,13 @@ class GroveChainableLED:
 
 
 chain = GroveChainableLED(pin=16, num_leds=4)
-buttons2 = {0: 22, 1: 24, 2: 26, 3: 18}
+buttons2 = {0: 22, 1: 24, 2: 26, 3: 18} # dictionnaire associant l'index de la séquence (obtenu avec randint) et la sortie du Raspberry PI
 
 for pin in buttons2.values():
     GPIO2.setup(pin, GPIO2.IN)
 
 
-def light_up_LED(index):
+def light_up_LED(index): # fonction qui allume la LED correspondant à index de la bonne couleur
     colors = [
         (100, 44, 221),
         (232, 150, 46),
@@ -89,50 +89,50 @@ def light_up_LED(index):
     chain.reset()
 
 
-def GAME_OVER():
+def GAME_OVER(): # fonction qui allume toutes les LEds en rouge si l'utilisateur se trompe et perd
     chain.fill((250, 0, 0))
     chain.write()
     sleep(1)
     chain.reset()
 
 
-def initialise_sequence():
+def initialise_sequence(): # fonction qui initialise une séquence de longueur 1, sous la forme d'une liste d'indices correspondant aux LEds
     return [randint(0,3)]
 
 
-def add_to_sequence(s):
+def add_to_sequence(s): # fonction qui allonge la séquence d'un élément
     s.append(randint(0,3))
     return s
 
 
 def game_round(s):
-    for e in s:
-        light_up_LED(e)
+    for e in s: # pour chaque indice dans la séquence s
+        light_up_LED(e) # allume la LED correspondante
         sleep(0.2)
 
-    for e in s:
+    for e in s: # boucle qui teste si l'utilisateur se trompe dans la reproduction de la séquence
         start = current_time()
         while True:
             if GPIO2.input(buttons2[e]):
                 light_up_LED(e)
                 break
 
-            if current_time() - start >= 7:
+            if current_time() - start >= 7: # si l'utilisateur prend trop de temps pour réagir
                 return False
 
-            for wrong in buttons2:
+            for wrong in buttons2: # si l'utilisateur se trompe de bouton
                 if wrong != e and GPIO2.input(buttons2[wrong]):
                     return False
 
     return True
 
 
-def game(update_score_callback):
+def game(update_score_callback): # fonction qui lance une partie
     chain.reset()
     score = 0
     s = initialise_sequence()
 
-    while game_round(s):
+    while game_round(s): # tant que l'utilisateur ne se trompe pas
         s = add_to_sequence(s)
         score += 50
         update_score_callback(score)
@@ -141,4 +141,5 @@ def game(update_score_callback):
     GAME_OVER()
     print("perdu")
     return score
+
 
